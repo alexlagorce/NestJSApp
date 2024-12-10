@@ -8,7 +8,7 @@ export class InstagramController {
   @Get('login')
   getInstagramLoginUrl() {
     const clientId = '1369551120699970';
-    const redirectUri = 'http://localhost:3000/instagram/callback';
+    const redirectUri = 'https://nestjsapp.onrender.com/instagram/callback';
     const scope = 'instagram_basic,instagram_content_publish,pages_show_list';
     const responseType = 'code';
 
@@ -17,9 +17,12 @@ export class InstagramController {
   }
 
   @Get('callback')
-  handleInstagramCallback(@Query('code') code: string) {
+    async handleInstagramCallback(@Query('code') code: string) {
+    if (!code) {
+        throw new Error('Code d\'autorisation manquant');
+    }
     return this.instagramService.exchangeCodeForToken(code);
-  }
+    }
 
   @Get('user-profile')
     async getUserProfile(@Query('userId') userId: string, @Query('accessToken') accessToken: string) {
