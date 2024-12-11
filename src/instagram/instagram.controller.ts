@@ -5,6 +5,11 @@ import { InstagramService } from './instagram.service';
 export class InstagramController {
   constructor(private readonly instagramService: InstagramService) {}
 
+  @Get('test')
+    getTest() {
+        return 'Test Instagram';
+    }
+
   @Get('login')
     getInstagramLoginUrl() {
         const loginUrl = `https://www.instagram.com/oauth/authorize?enable_fb_login=0&force_authentication=1&client_id=8810392132361238&redirect_uri=https://nestjsapp.onrender.com/instagram/callback&response_type=code&scope=instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish`;

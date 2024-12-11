@@ -12,7 +12,7 @@ export class InstagramService {
         this.accessToken = this.configService.get<string>('INSTAGRAM_ACCESS_TOKEN');
       }
 
-      async exchangeCodeForToken(code: string) {
+    async exchangeCodeForToken(code: string) {
         try {
             const response = await axios.post('https://api.instagram.com/oauth/access_token', {
                 client_id: '8810392132361238',
