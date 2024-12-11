@@ -12,16 +12,20 @@ export class InstagramService {
         this.accessToken = this.configService.get<string>('INSTAGRAM_ACCESS_TOKEN');
       }
 
-    async exchangeCodeForToken(code: string) {
-        const response = await axios.post('https://api.instagram.com/oauth/access_token', {
-        client_id: '8810392132361238',
-        client_secret: '6f3355913a763664e69',
-        grant_type: 'authorization_code',
-        redirect_uri: 'https://nestjsapp.onrender.com/instagram/callback',
-        code,
-        });
-
-        return response.data;
+      async exchangeCodeForToken(code: string) {
+        try {
+            const response = await axios.post('https://api.instagram.com/oauth/access_token', {
+                client_id: '8810392132361238',
+                client_secret: '6f3355913a763664e69',
+                grant_type: 'authorization_code',
+                redirect_uri: 'https://nestjsapp.onrender.com/instagram/callback',
+                code,
+            });
+            return response.data;
+        } catch (error) {
+            console.error('Error exchanging code for token:', error.response?.data || error.message);
+            throw new Error('Failed to exchange code for token.');
+        }
     }
 
     async getUserProfile(userId: string, accessToken: string) {
