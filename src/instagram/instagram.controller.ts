@@ -10,9 +10,10 @@ export class InstagramController {
         return 'Test Instagram';
     }
 
-  @Get('login')
+    @Get('login')
     getInstagramLoginUrl() {
-        const loginUrl = `https://www.instagram.com/oauth/authorize?enable_fb_login=0&force_authentication=1&client_id=8810392132361238&redirect_uri=https://nestjsapp.onrender.com/instagram/callback&response_type=code&scope=instagram_business_basic%2Cinstagram_business_manage_messages%2Cinstagram_business_manage_comments%2Cinstagram_business_content_publish`;
+        const redirectUri = 'https://nestjsapp.onrender.com/instagram/callback';
+        const loginUrl = `https://www.instagram.com/oauth/authorize?enable_fb_login=0&force_authentication=1&client_id=8810392132361238&redirect_uri=${redirectUri}&response_type=code&scope=instagram_business_basic%2Cinstagram_business_manage_messages%2Cinstagram_business_manage_comments%2Cinstagram_business_content_publish`;
         console.log('URL générée pour Instagram login:', loginUrl);
         return { loginUrl };
     }
