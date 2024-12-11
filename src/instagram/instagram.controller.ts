@@ -1,5 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { InstagramService } from './instagram.service';
+import axios from 'axios';
 
 @Controller('instagram')
 export class InstagramController {
