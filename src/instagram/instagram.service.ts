@@ -14,8 +14,8 @@ export class InstagramService {
 
     async exchangeCodeForToken(code: string) {
         const response = await axios.post('https://api.instagram.com/oauth/access_token', {
-        client_id: '1369551120699970',
-        client_secret: '8c1e3cd3013dc81af8e5454c01b7c442',
+        client_id: '8810392132361238',
+        client_secret: '6f3355913a763664e69',
         grant_type: 'authorization_code',
         redirect_uri: 'https://nestjsapp.onrender.com/instagram/callback',
         code,

@@ -10,13 +10,22 @@ export class InstagramController {
         const loginUrl = `https://www.instagram.com/oauth/authorize?enable_fb_login=0&force_authentication=1&client_id=8810392132361238&redirect_uri=https://nestjsapp.onrender.com/instagram/callback&response_type=code&scope=instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish`;
         return { loginUrl };
     }
-
-  @Get('callback')
+    
+    @Get('callback')
     async handleInstagramCallback(@Query('code') code: string) {
-    if (!code) {
-        throw new Error('Code d\'autorisation manquant');
-    }
-    return this.instagramService.exchangeCodeForToken(code);
+        console.log('Code reçu depuis Instagram:', code); // Vérifiez si le code est bien reçu
+        if (!code) {
+            throw new Error('Code d\'autorisation manquant');
+        }
+    
+        try {
+            const tokenData = await this.instagramService.exchangeCodeForToken(code);
+            console.log('Token reçu:', tokenData); // Vérifiez si le token est bien reçu
+            return tokenData; // Retournez les données du token pour confirmer que tout fonctionne
+        } catch (error) {
+            console.error('Erreur dans handleInstagramCallback:', error.message);
+            throw new Error('Erreur dans le callback Instagram.');
+        }
     }
 
   @Get('user-profile')
