@@ -7,24 +7,21 @@ import qs from 'qs'; // Utilisez qs pour convertir l'objet en chaîne de requêt
 export class InstagramService {
     private readonly apiUrl: string;
     private readonly accessToken: string;
+    private readonly clientId: string;
+    private readonly clientSecret: string;
 
     constructor(private configService: ConfigService) {
         this.apiUrl = this.configService.get<string>('INSTAGRAM_API_URL');
         this.accessToken = this.configService.get<string>('INSTAGRAM_ACCESS_TOKEN');
+        this.clientId = this.configService.get<string>('INSTAGRAM_CLIENT_ID');
+        this.clientSecret = this.configService.get<string>('INSTAGRAM_CLIENT_SECRET');
       }
 
       async exchangeCodeForToken(code: string) {
         try {
-            const redirectUri = 'https://nestjsapp.onrender.com/instagram/callback';-
-            console.log('URI redirection encodée:', redirectUri);
-
-            const requestData = new URLSearchParams({
-                client_id: '8810392132361238',
-                client_secret: '6f3355913a763664e69',
-                grant_type: 'authorization_code',
-                redirect_uri: redirectUri,
-                code,
-            }).toString();
+            const redirectUri = 'https://nestjsapp.onrender.com/instagram/callback';
+            
+            const requestData = `client_id=${this.clientId}&client_secret=${this.clientSecret}&grant_type=authorization_code&redirect_uri=${redirectUri}&code=${code}`;
     
             console.log('Données formatées pour le POST :', requestData);
     
