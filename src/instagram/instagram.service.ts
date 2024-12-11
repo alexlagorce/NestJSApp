@@ -24,6 +24,7 @@ export class InstagramService {
             const requestData = `client_id=${this.clientId}&client_secret=${this.clientSecret}&grant_type=authorization_code&redirect_uri=${redirectUri}&code=${code}`;
     
             console.log('Données formatées pour le POST :', requestData);
+            console.log('Redirect URI pour POST:', redirectUri);
     
             const response = await axios.post(
                 'https://api.instagram.com/oauth/access_token',
