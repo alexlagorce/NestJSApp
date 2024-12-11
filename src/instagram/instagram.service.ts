@@ -15,22 +15,22 @@ export class InstagramService {
 
       async exchangeCodeForToken(code: string) {
         try {
-            const requestData = {
+            const requestData = new URLSearchParams({
                 client_id: '8810392132361238',
                 client_secret: '6f3355913a763664e69',
                 grant_type: 'authorization_code',
                 redirect_uri: 'https://nestjsapp.onrender.com/instagram/callback',
                 code,
-            };
-            console.log('Données brutes à envoyer :', requestData);
-            const formattedData = qs.stringify(requestData);
-            console.log('Données formatées pour le POST :', formattedData);
+            }).toString();
+    
+            console.log('Données formatées pour le POST :', requestData);
     
             const response = await axios.post(
                 'https://api.instagram.com/oauth/access_token',
                 requestData,
                 { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
             );
+    
             return response.data;
         } catch (error) {
             console.error('Error exchanging code for token:', error.response?.data || error.message);
