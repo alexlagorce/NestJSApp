@@ -16,8 +16,7 @@ export class InstagramController {
 
     @Get('login')
     getInstagramLoginUrl() {
-        const encodedRedirectUri = encodeURIComponent(this.redirectUri);
-        const loginUrl = `https://www.instagram.com/oauth/authorize?enable_fb_login=0&force_authentication=1&client_id=8810392132361238&redirect_uri=${encodedRedirectUri}&response_type=code&scope=instagram_business_basic%2Cinstagram_business_manage_messages%2Cinstagram_business_manage_comments%2Cinstagram_business_content_publish`;
+        const loginUrl = `https://www.instagram.com/oauth/authorize?enable_fb_login=0&force_authentication=1&client_id=8810392132361238&redirect_uri=${this.redirectUri}&response_type=code&scope=instagram_business_basic%2Cinstagram_business_manage_messages%2Cinstagram_business_manage_comments%2Cinstagram_business_content_publish`;
         return { loginUrl };
     }
     
@@ -30,8 +29,7 @@ export class InstagramController {
 
             try {
             // Préparez les données pour la requête POST
-            const encodedRedirectUri = encodeURIComponent(this.redirectUri);
-            const requestData = `client_id=${this.clientId}&client_secret=${this.clientSecret}&grant_type=authorization_code&redirect_uri=${encodedRedirectUri}&code=${code}`;
+            const requestData = `client_id=${this.clientId}&client_secret=${this.clientSecret}&grant_type=authorization_code&redirect_uri=${this.redirectUri}&code=${code}`;
             console.log('Données formatées pour le POST :', requestData);
 
             // Envoyez la requête POST pour échanger le code contre un token
