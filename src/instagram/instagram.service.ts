@@ -15,15 +15,14 @@ export class InstagramService {
 
       async exchangeCodeForToken(code: string) {
         try {
-            const redirectUri = 'https://nestjsapp.onrender.com/instagram/callback';
-            const encodedRedirectUri = encodeURIComponent(redirectUri);
-            console.log('URI redirection encodée:', encodedRedirectUri);
-            
+            const redirectUri = 'https://nestjsapp.onrender.com/instagram/callback';-
+            console.log('URI redirection encodée:', redirectUri);
+
             const requestData = new URLSearchParams({
                 client_id: '8810392132361238',
                 client_secret: '6f3355913a763664e69',
                 grant_type: 'authorization_code',
-                redirect_uri: encodedRedirectUri,
+                redirect_uri: redirectUri,
                 code,
             }).toString();
     
@@ -35,6 +34,7 @@ export class InstagramService {
                 { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
             );
     
+            console.log('Réponse de la requête POST:', response.data);
             return response.data;
         } catch (error) {
             console.error('Error exchanging code for token:', error.response?.data || error.message);
