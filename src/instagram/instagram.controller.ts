@@ -13,13 +13,12 @@ export class InstagramController {
     @Get('login')
     getInstagramLoginUrl() {
         const redirectUri = 'https://nestjsapp.onrender.com/instagram/callback';
-        const encodedRedirectUri = encodeURIComponent(redirectUri);
-        const loginUrl = `https://www.instagram.com/oauth/authorize?enable_fb_login=0&force_authentication=1&client_id=8810392132361238&redirect_uri=${encodedRedirectUri}&response_type=code&scope=instagram_business_basic%2Cinstagram_business_manage_messages%2Cinstagram_business_manage_comments%2Cinstagram_business_content_publish`;
+        const loginUrl = `https://www.instagram.com/oauth/authorize?enable_fb_login=0&force_authentication=1&client_id=8810392132361238&redirect_uri=${redirectUri}&response_type=code&scope=instagram_business_basic%2Cinstagram_business_manage_messages%2Cinstagram_business_manage_comments%2Cinstagram_business_content_publish`;
         console.log('URL générée pour Instagram login:', loginUrl);
         return { loginUrl };
     }
     
-    
+
     @Get('callback')
     async handleInstagramCallback(@Query('code') code: string) {
         console.log('Code reçu depuis Instagram:', code); // Vérifiez si le code est bien reçu
