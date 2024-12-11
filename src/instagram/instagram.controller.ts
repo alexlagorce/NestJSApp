@@ -6,15 +6,10 @@ export class InstagramController {
   constructor(private readonly instagramService: InstagramService) {}
 
   @Get('login')
-  getInstagramLoginUrl() {
-    const clientId = '1369551120699970';
-    const redirectUri = 'https://nestjsapp.onrender.com/instagram/callback';
-    const scope = 'instagram_basic,instagram_content_publish,pages_show_list';
-    const responseType = 'code';
-
-    const loginUrl = `https://api.instagram.com/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}&response_type=${responseType}`;
-    return { loginUrl };
-  }
+    getInstagramLoginUrl() {
+        const loginUrl = `https://www.instagram.com/oauth/authorize?enable_fb_login=0&force_authentication=1&client_id=8810392132361238&redirect_uri=https://nestjsapp.onrender.com/instagram/callback&response_type=code&scope=instagram_business_basic,instagram_business_manage_messages,instagram_business_manage_comments,instagram_business_content_publish`;
+        return { loginUrl };
+    }
 
   @Get('callback')
     async handleInstagramCallback(@Query('code') code: string) {
