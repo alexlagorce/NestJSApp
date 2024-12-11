@@ -16,11 +16,14 @@ export class InstagramService {
       async exchangeCodeForToken(code: string) {
         try {
             const redirectUri = 'https://nestjsapp.onrender.com/instagram/callback';
+            const encodedRedirectUri = encodeURIComponent(redirectUri);
+            console.log('URI redirection encodée:', encodedRedirectUri);
+            
             const requestData = new URLSearchParams({
                 client_id: '8810392132361238',
                 client_secret: '6f3355913a763664e69',
                 grant_type: 'authorization_code',
-                redirect_uri: redirectUri,
+                redirect_uri: encodedRedirectUri,
                 code,
             }).toString();
     
