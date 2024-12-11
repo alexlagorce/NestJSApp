@@ -15,16 +15,19 @@ export class InstagramService {
 
       async exchangeCodeForToken(code: string) {
         try {
+            const requestData = qs.stringify({
+                client_id: '8810392132361238',
+                client_secret: '6f3355913a763664e69',
+                grant_type: 'authorization_code',
+                redirect_uri: 'https://nestjsapp.onrender.com/instagram/callback',
+                code,
+            });
+            console.log('Données envoyées pour obtenir le token :', requestData);
+    
             const response = await axios.post(
                 'https://api.instagram.com/oauth/access_token',
-                qs.stringify({ // Utilisez qs.stringify ici
-                    client_id: '8810392132361238',
-                    client_secret: '6f3355913a763664e69',
-                    grant_type: 'authorization_code',
-                    redirect_uri: 'https://nestjsapp.onrender.com/instagram/callback',
-                    code,
-                }),
-                { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } } // Ajoutez le bon header
+                requestData,
+                { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
             );
             return response.data;
         } catch (error) {
