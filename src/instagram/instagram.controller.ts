@@ -24,10 +24,7 @@ export class InstagramController {
     
     @Get('test-callback')
     async handleInstagramCallback(@Query('code') code: string) {
-        // Supprimer les éventuels fragments
-        code = code?.split('#')[0];
-        console.log('Code nettoyé:', code);
-
+     
         console.log('Code reçu depuis Instagram:', code); // Vérifiez si le code est bien reçu
         if (!code) {
             throw new Error('Code d\'autorisation manquant');
