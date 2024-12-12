@@ -16,7 +16,7 @@ export class InstagramController {
         const redirectUri = 'https://nestjsapp.onrender.com/instagram/test-callback';
         console.log('Redirect URI utilisé pour le login:', redirectUri);
         const encodedRedirectUri = encodeURIComponent(redirectUri);
-        const loginUrl = `https://www.instagram.com/oauth/authorize?enable_fb_login=0&force_authentication=1&client_id=8810392132361238&redirect_uri=https://nestjsapp.onrender.com/instagram/test-callback&response_type=code&scope=instagram_business_basic%2Cinstagram_business_manage_messages%2Cinstagram_business_manage_comments%2Cinstagram_business_content_publish`;
+        const loginUrl = `https://www.instagram.com/oauth/authorize?enable_fb_login=0&force_authentication=1&client_id=8810392132361238&redirect_uri=${redirectUri}&response_type=code&scope=instagram_business_basic%2Cinstagram_business_manage_messages%2Cinstagram_business_manage_comments%2Cinstagram_business_content_publish`;
         console.log('URL générée pour Instagram login:', loginUrl);
         return { loginUrl };
         
@@ -24,6 +24,10 @@ export class InstagramController {
     
     @Get('test-callback')
     async handleInstagramCallback(@Query('code') code: string) {
+        // Supprimer les éventuels fragments
+        code = code?.split('#')[0];
+        console.log('Code nettoyé:', code);
+
         console.log('Code reçu depuis Instagram:', code); // Vérifiez si le code est bien reçu
         if (!code) {
             throw new Error('Code d\'autorisation manquant');
