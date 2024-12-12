@@ -20,36 +20,24 @@ export class InstagramService {
       async exchangeCodeForToken(code: string) {
         try {
             const redirectUri = 'https://nestjsapp.onrender.com/instagram/callback';
-            
-            const requestData = new URLSearchParams({
-                client_id: this.clientId,
-                client_secret: this.clientSecret,
-                grant_type: "authorization_code",
-                redirect_uri: redirectUri,
-                code, // le code reçu de la redirection
-            });
-            
-            console.log('Données formatées pour le POST :', requestData.toString());
     
-            const response = await fetch('https://api.instagram.com/oauth/access_token', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: requestData.toString(),
-            });
+            const formData = new FormData();
+            formData.append('client_id', this.clientId);
+            formData.append('client_secret', this.clientSecret);
+            formData.append('grant_type', 'authorization_code');
+            formData.append('redirect_uri', redirectUri);
+            formData.append('code', code);
     
-            if (!response.ok) {
-                const errorData = await response.json();
-                console.error('Erreur lors de l\'échange de code pour le token:', errorData);
-                throw new Error('Failed to exchange code for token.');
-            }
+            const response = await axios.post(
+                'https://api.instagram.com/oauth/access_token',
+                formData,
+                { headers: { 'Content-Type': 'multipart/form-data' } } // Ajout automatique des en-têtes pour FormData
+            );
     
-            const data = await response.json();
-            console.log('Réponse de la requête POST:', data);
-            return data;
+            console.log('Réponse de la requête POST:', response.data);
+            return response.data;
         } catch (error) {
-            console.error('Erreur lors de l\'échange de code pour le token:', error.message);
+            console.error('Erreur lors de l\'échange de code pour le token:', error.response?.data || error.message);
             throw new Error('Erreur lors de l\'échange de code pour le token.');
         }
     }
