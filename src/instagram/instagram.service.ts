@@ -21,7 +21,7 @@ export class InstagramService {
             console.log('Début de la méthode exchangeCodeForToken');
             console.log('Code reçu:', code);
     
-            const redirectUri = 'https://nestjsapp.onrender.com/instagram/test-callback';
+            const redirectUri = 'https://nestjsapp.onrender.com/instagram/test-callback/';
             if (!redirectUri || !code) {
               throw new Error('Redirect URI ou code manquant.');
           }
