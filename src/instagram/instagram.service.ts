@@ -19,33 +19,45 @@ export class InstagramService {
         
       async exchangeCodeForToken(code: string) {
         try {
+            console.log('Début de la méthode exchangeCodeForToken');
+            console.log('Code reçu:', code);
+    
             const redirectUri = 'https://nestjsapp.onrender.com/instagram/callback';
+            console.log('Redirect URI:', redirectUri);
     
             const formData = new FormData();
             formData.append('client_id', this.clientId);
             formData.append('client_secret', this.clientSecret);
             formData.append('grant_type', 'authorization_code');
-            formData.append('redirect_uri', 'https://nestjsapp.onrender.com/instagram/callback');
+            formData.append('redirect_uri', redirectUri);
             formData.append('code', code);
-
-            console.log('Données du formulaire:', formData);
+    
+            console.log('FormData préparé :');
+            formData.forEach((value, key) => {
+                console.log(`  ${key}: ${value}`);
+            });
     
             const response = await fetch('https://api.instagram.com/oauth/access_token', {
                 method: 'POST',
                 body: formData,
             });
     
+            console.log('Réponse HTTP de l\'API Instagram:');
+            console.log('Status:', response.status);
+            console.log('StatusText:', response.statusText);
+    
             if (!response.ok) {
                 const errorData = await response.json();
-                console.error('Erreur lors de l\'échange de code pour le token:', errorData);
+                console.error('Erreur retournée par Instagram:', errorData);
                 throw new Error('Failed to exchange code for token.');
             }
     
             const data = await response.json();
-             
+            console.log('Réponse JSON de l\'API Instagram:', data);
+    
             return data;
         } catch (error) {
-            console.error('Erreur lors de l\'échange de code pour le token:', error.message);
+            console.error('Erreur dans exchangeCodeForToken:', error.message);
             throw new Error('Erreur lors de l\'échange de code pour le token.');
         }
     }
