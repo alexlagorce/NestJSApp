@@ -16,7 +16,7 @@ export class InstagramService {
         this.clientId = this.configService.get<string>('INSTAGRAM_CLIENT_ID');
         this.clientSecret = this.configService.get<string>('INSTAGRAM_CLIENT_SECRET');
       }
-
+        
       async exchangeCodeForToken(code: string) {
         try {
             const redirectUri = 'https://nestjsapp.onrender.com/instagram/callback';
