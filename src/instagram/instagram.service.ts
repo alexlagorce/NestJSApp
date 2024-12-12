@@ -27,17 +27,25 @@ export class InstagramService {
             formData.append('grant_type', 'authorization_code');
             formData.append('redirect_uri', redirectUri);
             formData.append('code', code);
+
+            console.log('Données du formulaire:', formData);
     
-            const response = await axios.post(
-                'https://api.instagram.com/oauth/access_token',
-                formData,
-                { headers: { 'Content-Type': 'multipart/form-data' } } // Ajout automatique des en-têtes pour FormData
-            );
+            const response = await fetch('https://api.instagram.com/oauth/access_token', {
+                method: 'POST',
+                body: formData,
+            });
     
-            console.log('Réponse de la requête POST:', response.data);
-            return response.data;
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Erreur lors de l\'échange de code pour le token:', errorData);
+                throw new Error('Failed to exchange code for token.');
+            }
+    
+            const data = await response.json();
+            console.log('Réponse de la requête POST:', data);
+            return data;
         } catch (error) {
-            console.error('Erreur lors de l\'échange de code pour le token:', error.response?.data || error.message);
+            console.error('Erreur lors de l\'échange de code pour le token:', error.message);
             throw new Error('Erreur lors de l\'échange de code pour le token.');
         }
     }
