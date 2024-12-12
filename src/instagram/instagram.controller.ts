@@ -19,8 +19,7 @@ export class InstagramController {
         return { loginUrl };
     }
     
-
-    @Post('callback')
+    @Get('callback')
     async handleInstagramCallback(@Query('code') code: string) {
         console.log('Code reçu depuis Instagram:', code); // Vérifiez si le code est bien reçu
         if (!code) {
