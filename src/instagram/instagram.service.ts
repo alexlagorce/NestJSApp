@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
-import qs from 'qs'; // Utilisez qs pour convertir l'objet en chaîne de requête
 
 @Injectable()
 export class InstagramService {
@@ -22,25 +21,29 @@ export class InstagramService {
             console.log('Début de la méthode exchangeCodeForToken');
             console.log('Code reçu:', code);
     
-            const redirectUri = 'https://nestjsapp.onrender.com/instagram/callback';
-            console.log('Redirect URI:', redirectUri);
+            const redirectUri = 'https://nestjsapp.onrender.com/instagram/test-callback';
+            if (!redirectUri || !code) {
+              throw new Error('Redirect URI ou code manquant.');
+          }
+          console.log('Redirect URI utilisé:', redirectUri);
     
-            const formData = new FormData();
-            formData.append('client_id', this.clientId);
-            formData.append('client_secret', this.clientSecret);
-            formData.append('grant_type', 'authorization_code');
-            formData.append('redirect_uri', redirectUri);
-            formData.append('code', code);
-    
-            console.log('FormData préparé :');
-            formData.forEach((value, key) => {
-                console.log(`  ${key}: ${value}`);
-            });
-    
-            const response = await fetch('https://api.instagram.com/oauth/access_token', {
-                method: 'POST',
-                body: formData,
-            });
+            const requestData = new URLSearchParams({
+              client_id: this.clientId,
+              client_secret: this.clientSecret,
+              grant_type: 'authorization_code',
+              redirect_uri: redirectUri,
+              code,
+          });
+
+          console.log('FormData préparé :', requestData.toString());
+          
+          const response = await fetch('https://api.instagram.com/oauth/access_token', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+              },
+              body: requestData.toString(),
+          });
     
             console.log('Réponse HTTP de l\'API Instagram:');
             console.log('Status:', response.status);
