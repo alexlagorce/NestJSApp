@@ -25,7 +25,7 @@ export class InstagramService {
             formData.append('client_id', this.clientId);
             formData.append('client_secret', this.clientSecret);
             formData.append('grant_type', 'authorization_code');
-            formData.append('redirect_uri', redirectUri);
+            formData.append('redirect_uri', 'https://nestjsapp.onrender.com/instagram/callback');
             formData.append('code', code);
 
             console.log('Données du formulaire:', formData);
@@ -42,7 +42,7 @@ export class InstagramService {
             }
     
             const data = await response.json();
-            console.log('Réponse de la requête POST:', data);
+             
             return data;
         } catch (error) {
             console.error('Erreur lors de l\'échange de code pour le token:', error.message);
