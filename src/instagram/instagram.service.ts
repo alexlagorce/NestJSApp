@@ -21,8 +21,13 @@ export class InstagramService {
         try {
             const redirectUri = 'https://nestjsapp.onrender.com/instagram/callback';
             
-            const requestData = `client_id=${this.clientId}&client_secret=${this.clientSecret}&grant_type=authorization_code&redirect_uri=${redirectUri}&code=${code}`;
-    
+            const requestData = {
+                client_id: this.clientId,
+                client_secret: this.clientSecret,
+                grant_type: "authorization_code",
+                redirect_uri: redirectUri,
+                code, // le code que tu récupère dans l'url puis que tu envoies au back une fois que le user s'est signup avec Insta
+            };
             console.log('Données formatées pour le POST :', requestData);
             console.log('Redirect URI pour POST:', redirectUri);
     
