@@ -29,7 +29,6 @@ export class InstagramService {
                 code, // le code que tu récupère dans l'url puis que tu envoies au back une fois que le user s'est signup avec Insta
             };
             console.log('Données formatées pour le POST :', requestData);
-            console.log('Redirect URI pour POST:', redirectUri);
     
             const response = await axios.post(
                 'https://api.instagram.com/oauth/access_token',
