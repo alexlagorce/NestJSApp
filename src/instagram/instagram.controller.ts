@@ -4,7 +4,9 @@ import { InstagramService } from './instagram.service';
 
 @Controller('instagram')
 export class InstagramController {
-  constructor(private readonly instagramService: InstagramService) {}
+    private readonly CLIENT_ID = process.env.INSTAGRAM_CLIENT_ID;
+    
+    constructor(private readonly instagramService: InstagramService) {}
 
     @Get('test')
     getTest() {
@@ -15,8 +17,25 @@ export class InstagramController {
     getInstagramLoginUrl() {
         console.log("Génération de l'URL de connexion Instagram");
         console.log('Redirect URI utilisé pour le login:', REDIRECT_URI);
-        const encodedRedirectUri = encodeURIComponent(REDIRECT_URI);
-        const loginUrl = `https://www.instagram.com/oauth/authorize?enable_fb_login=0&force_authentication=1&client_id=${process.env.INSTAGRAM_CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code&scope=instagram_business_basic%2Cinstagram_business_manage_messages%2Cinstagram_business_manage_comments%2Cinstagram_business_content_publish`;
+        
+        // Créer un objet pour gérer les paramètres d'URL
+        const params = new URLSearchParams({
+            enable_fb_login: '0',
+            force_authentication: '1',
+            client_id: this.CLIENT_ID,
+            redirect_uri: REDIRECT_URI,
+            response_type: 'code',
+            scope: [
+            'instagram_business_basic',
+            'instagram_business_manage_messages',
+            'instagram_business_manage_comments',
+            'instagram_business_content_publish',
+            ].join(','),
+        });
+
+        // Générer l'URL complète
+        const loginUrl = `https://www.instagram.com/oauth/authorize?${params.toString()}`;
+
         console.log('URL générée pour Instagram login:', loginUrl);
         return { loginUrl };
     }
@@ -79,5 +98,20 @@ export class InstagramController {
         }
 
         return this.instagramService.getMediaDetails(mediaId, accessToken);
+    }
+
+    @Get('publish-reel')
+    async publishReel(
+        @Query('igUserId') igUserId: string,
+        @Query('accessToken') accessToken: string,
+        @Query('videoUrl') videoUrl: string,
+        @Query('caption') caption: string,
+    ) {
+        if (!igUserId || !accessToken || !videoUrl) {
+        throw new Error('L\'ID utilisateur Instagram, le token d\'accès et l\'URL de la vidéo sont requis.');
         }
+
+        return this.instagramService.postInstagramReel(igUserId, accessToken, videoUrl, caption || '');
+    }
+    
 }

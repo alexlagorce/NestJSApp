@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import { REDIRECT_URI } from 'src/instagram/constant';
+import { InstagramMediaResponse, ContainerStatusResponse } from './instagram.types';
 
 @Injectable()
 export class InstagramService {
@@ -162,4 +163,91 @@ export class InstagramService {
       throw new Error('Impossible de récupérer les détails du média.');
     }
   }
+
+  // Fonction pour vérifier l'état du conteneur
+  private async checkContainerStatus(containerId: string, accessToken: string): Promise<boolean> {
+    const statusUrl = `https://graph.instagram.com/v21.0/${containerId}`;
+    const params = { fields: 'status_code', access_token: accessToken };
+
+    for (let i = 0; i < 5; i++) { // Réessayer jusqu'à 5 fois
+      const response = await axios.get<ContainerStatusResponse>(statusUrl, { params });
+      const { status_code } = response.data;
+
+      console.log(`Vérification du statut : Tentative ${i + 1} - Statut : ${status_code}`);
+      if (status_code === 'FINISHED') {
+        return true; // Le conteneur est prêt
+      }
+
+      await this.sleep(5000); // Attendre 5 secondes avant de réessayer
+    }
+
+    return false; // Le conteneur n'est pas prêt après 5 tentatives
+  }
+
+  // Fonction pour attendre un délai donné
+  private sleep(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  // Ajout de la fonction pour publier un Reel
+  async postInstagramReel(
+    igUserId: string,
+    accessToken: string,
+    videoUrl: string,
+    caption: string
+  ): Promise<InstagramMediaResponse> {
+    try {
+      console.log('Étape 1: Création du conteneur pour le Reel...');
+      const createContainerUrl = `https://graph.instagram.com/v21.0/${igUserId}/media`;
+  
+      const containerResponse = await axios.post<InstagramMediaResponse>(
+        createContainerUrl,
+        null,
+        {
+          params: {
+            media_type: 'REELS',
+            video_url: videoUrl,
+            caption: caption,
+            access_token: accessToken,
+          },
+        }
+      );
+  
+      const { id: creationId } = containerResponse.data; // TypeScript connaît maintenant le type
+      console.log('Conteneur créé avec succès, ID:', creationId);
+
+      // Étape 2 : Vérifier que le conteneur est prêt
+      console.log('Étape 2: Vérification du statut du conteneur...');
+      const isReady = await this.checkContainerStatus(creationId, accessToken);
+
+      if (!isReady) {
+        throw new Error("Le conteneur n'est pas prêt après plusieurs tentatives.");
+      }
+
+      // Étape 3 : Publier le conteneur
+      console.log('Étape 3: Publication du conteneur...');
+      const publishUrl = `https://graph.instagram.com/v21.0/${igUserId}/media_publish`;
+
+      const publishResponse = await axios.post<InstagramMediaResponse>(
+        publishUrl,
+        null,
+        {
+          params: {
+            creation_id: creationId,
+            access_token: accessToken,
+          },
+        }
+      );
+  
+      console.log('Reel publié avec succès:', publishResponse.data);
+      return publishResponse.data;
+    } catch (error) {
+      console.error(
+        'Erreur lors de la publication du Reel :',
+        error.response?.data || error.message
+      );
+      throw new Error('Impossible de publier le Reel.');
+    }
+  }
+
 }
